@@ -6,11 +6,11 @@ import DesignPatternPractice.CarRental.inventory.CentralInventory;
 import DesignPatternPractice.CarRental.payment.Payment;
 import DesignPatternPractice.CarRental.services.CarRentalServices;
 
-public class Console {
+public class BookingController {
 
         private CarRentalServices services;
         private CentralInventory centralInventory;
-        public  Console(CentralInventory centralInventory){
+        public BookingController(CentralInventory centralInventory){
             this.services=new CarRentalServices();
             this.centralInventory=centralInventory;
         }

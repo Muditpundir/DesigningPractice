@@ -2,7 +2,7 @@ package DesignPatternPractice.CarRental.buildIt;
 
 import DesignPatternPractice.CarRental.enums.CityEnum;
 
-public class BuildCars {
+public class CarCreationConfiguration {
 
     public int getSuv() {
         return suv;
@@ -20,19 +20,19 @@ public class BuildCars {
     }
 
     private CityEnum cityEnum;
-    public  BuildCars createSuvs(int cnt){
+    public CarCreationConfiguration createSuvs(int cnt){
         this.suv=cnt;
         return this;
     }
-    public  BuildCars createSedan(int cnt){
+    public CarCreationConfiguration createSedan(int cnt){
         this.sedan=cnt;
         return  this;
     }
-    public  BuildCars createForCity(CityEnum cityEnum){
+    public CarCreationConfiguration createForCity(CityEnum cityEnum){
         this.cityEnum=cityEnum;
         return this;
     }
-    public  BuildCars build(){
+    public CarCreationConfiguration build(){
         return  this;
     }
 }

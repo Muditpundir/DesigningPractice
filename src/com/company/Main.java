@@ -2,8 +2,8 @@ package com.company;
 
 
 
-import DesignPatternPractice.CarRental.Console;
-import DesignPatternPractice.CarRental.buildIt.BuildCars;
+import DesignPatternPractice.CarRental.BookingController;
+import DesignPatternPractice.CarRental.buildIt.CarCreationConfiguration;
 import DesignPatternPractice.CarRental.entities.BookingQuery;
 import DesignPatternPractice.CarRental.entities.UserDetails;
 import DesignPatternPractice.CarRental.enums.CarCategoryEnum;
@@ -15,8 +15,6 @@ import DesignPatternPractice.CarRental.payment.CardPayment;
 
 
 import java.time.LocalDate;
-import java.util.ConcurrentModificationException;
-import java.util.List;
 
 public class Main {
 
@@ -24,9 +22,9 @@ public class Main {
 
         CarInventory carInventory=new CarInventory(CityEnum.GURGAON);
         CarFactory factory=new CarFactory();
-        BuildCars buildCars=new BuildCars();
-        buildCars.createForCity(CityEnum.GURGAON).createSedan(1).createSuvs(1).build();
-        carInventory.addCar(factory.createCars(buildCars));
+        CarCreationConfiguration carCreationConfiguration =new CarCreationConfiguration();
+        carCreationConfiguration.createForCity(CityEnum.GURGAON).createSedan(1).createSuvs(1).build();
+        carInventory.addCar(factory.createCars(carCreationConfiguration));
 
         CentralInventory centralInventory=new CentralInventory();
         centralInventory.addCarInventoryCity(carInventory);
@@ -35,12 +33,12 @@ public class Main {
         UserDetails userDetails=new UserDetails("Mudit","abc@gmail.com");
 
         LocalDate today=LocalDate.now();
-        BookingQuery bookingQuery= new BookingQuery(CityEnum.GURGAON,today.plusDays(1),today.plusDays(3),CarCategoryEnum.SDEAN,userDetails);
+        BookingQuery bookingQuery= new BookingQuery(CityEnum.GURGAON,today.plusDays(1),today.plusDays(3),CarCategoryEnum.SEDAN,userDetails);
 
 
-        Console console=new Console(centralInventory);
-        console.processBooking(bookingQuery,new CardPayment());
-        console.processBooking(bookingQuery,new CardPayment());
+        BookingController bookingController =new BookingController(centralInventory);
+        bookingController.processBooking(bookingQuery,new CardPayment());
+        bookingController.processBooking(bookingQuery,new CardPayment());
 
 
 
