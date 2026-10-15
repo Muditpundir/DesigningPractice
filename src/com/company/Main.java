@@ -2,55 +2,45 @@ package com.company;
 
 
 
-import DesignPatternPractice.flightBookingSystem.console.Console;
-import DesignPatternPractice.flightBookingSystem.entites.*;
-import DesignPatternPractice.flightBookingSystem.enums.CityEnum;
-import DesignPatternPractice.flightBookingSystem.enums.CompanyEnum;
-import DesignPatternPractice.flightBookingSystem.enums.SeatTypeEnum;
-import DesignPatternPractice.flightBookingSystem.factory.PlaneFactory;
-import DesignPatternPractice.flightBookingSystem.factory.SeatFactory;
-import DesignPatternPractice.flightBookingSystem.paymentStrategy.Card;
+import DesignPatternPractice.CarRental.Console;
+import DesignPatternPractice.CarRental.buildIt.BuildCars;
+import DesignPatternPractice.CarRental.entities.BookingQuery;
+import DesignPatternPractice.CarRental.entities.UserDetails;
+import DesignPatternPractice.CarRental.enums.CarCategoryEnum;
+import DesignPatternPractice.CarRental.enums.CityEnum;
+import DesignPatternPractice.CarRental.factory.CarFactory;
+import DesignPatternPractice.CarRental.inventory.CarInventory;
+import DesignPatternPractice.CarRental.inventory.CentralInventory;
+import DesignPatternPractice.CarRental.payment.CardPayment;
 
 
 import java.time.LocalDate;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        PlaneFactory planeFactory=new PlaneFactory();
-        Plane airIndia101=planeFactory.createAirIndiaPlane(CityEnum.HYD,CityEnum.GUGAON,"AR101");
-        Plane vistara101=planeFactory.createVistara(CityEnum.HYD,CityEnum.GUGAON,"VIS101");
+        CarInventory carInventory=new CarInventory(CityEnum.GURGAON);
+        CarFactory factory=new CarFactory();
+        BuildCars buildCars=new BuildCars();
+        buildCars.createForCity(CityEnum.GURGAON).createSedan(1).createSuvs(1).build();
+        carInventory.addCar(factory.createCars(buildCars));
+
+        CentralInventory centralInventory=new CentralInventory();
+        centralInventory.addCarInventoryCity(carInventory);
 
 
-        SeatFactory seatFactory=new SeatFactory();
-        List<Seat>vistarSeats= seatFactory.createSeats(1,1,1);
-        vistara101.addSeats(vistarSeats);
-
-         airIndia101.addSeats(seatFactory.createSeats(1,1,1));
-
-        Airport airport=new Airport(CityEnum.HYD);
-        airport.addPlaneToAirport(vistara101);
-        airport.addPlaneToAirport(airIndia101);
-
-
-        //console and user end
         UserDetails userDetails=new UserDetails("Mudit","abc@gmail.com");
-        BookingQuery bookingQuery=new BookingQuery(userDetails,CityEnum.HYD,CityEnum.GUGAON,LocalDate.now(), CompanyEnum.VISTARA, SeatTypeEnum.WINDOW);
+
+        LocalDate today=LocalDate.now();
+        BookingQuery bookingQuery= new BookingQuery(CityEnum.GURGAON,today.plusDays(1),today.plusDays(3),CarCategoryEnum.SDEAN,userDetails);
 
 
-        //
-        AirportManagement airportManagement=new AirportManagement();
-        airportManagement.addAirport(airport);
-
-        Console console=new Console(airportManagement);
-        console.createBooking(bookingQuery,new Card());
-        console.createBooking(bookingQuery,new Card());
-
-
-
-
+        Console console=new Console(centralInventory);
+        console.processBooking(bookingQuery,new CardPayment());
+        console.processBooking(bookingQuery,new CardPayment());
 
 
 

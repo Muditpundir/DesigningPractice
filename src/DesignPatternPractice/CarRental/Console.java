@@ -1,61 +1,29 @@
-
 package DesignPatternPractice.CarRental;
 
-import DesignPatternPractice.CarRental.Registeration.RegisterationDetails;
-import DesignPatternPractice.CarRental.RentalManagement.RentalStoreManagement;
-import DesignPatternPractice.CarRental.Vehicle.Vehicle;
-
-import java.util.Scanner;
+import DesignPatternPractice.CarRental.entities.BookingQuery;
+import DesignPatternPractice.CarRental.entities.Car;
+import DesignPatternPractice.CarRental.inventory.CentralInventory;
+import DesignPatternPractice.CarRental.payment.Payment;
+import DesignPatternPractice.CarRental.services.CarRentalServices;
 
 public class Console {
-//
-//    public RentalStoreManagement management;
-//    Scanner sc;
-//
-//    public  Console(){
-//        management=RentalStoreManagement.getInstance();
-//        sc=new Scanner(System.in);
-//    }
-//
-//    public void query( ){
-//        RentalEnums.VehicleType vehicle=null;
-//          System.out.println("Please enter the startDate");
-//          String std=sc.nextLine();
-//          System.out.println("Please enter the end date");
-//          String endD=sc.nextLine();
-//
-//        System.out.println("press 1 for suv, 2 for sedan");
-//        String type=sc.nextLine();
-//        if(type.equals("1"))vehicle= RentalEnums.VehicleType.SUV;
-//        if(type.equals("2"))vehicle=RentalEnums.VehicleType.SEDAN;
-//       System.out.println(type+" "+vehicle);
-//       Vehicle availablity= management.checkAvailablity(vehicle);
-//       if(availablity!=null){
-//           System.out.println("Vehicle is available");
-//           System.out.println("Press y for booking n for cancel");
-//           String choice=sc.nextLine();
-//           if(choice.equals("y"))book(availablity,std,endD);
-//           else System.out.println("Thankyou!! visit again");
-//       }
-//       else {
-//           System.out.println("Sorry not available ");
-//           management.showAvailableOptions();
-//       }
-//       System.out.println("press x to exit");
-//       String choice=sc.nextLine();
-//       if(choice.equals("y")==false)query();
-//       else System.out.println("Thankssss");
-//
-//
-//
-//    }
-//    public  RegisterationDetails book(Vehicle vehicle,String std,String end){
-//        return management.bookit(vehicle,std,end);
-//
-//    }
-//    public void completedTrip(RegisterationDetails  details){
-//        management.completedTrip(details);
-//
-//    }
 
+        private CarRentalServices services;
+        private CentralInventory centralInventory;
+        public  Console(CentralInventory centralInventory){
+            this.services=new CarRentalServices();
+            this.centralInventory=centralInventory;
+        }
+
+    public void processBooking(BookingQuery bookingQuery, Payment payment){
+           Car car=  services.processBooking(bookingQuery,centralInventory);
+           if(car==null){System.out.println("Car is not availble right now");}
+           else {
+             services.processPayment(bookingQuery,car,payment);
+             if(services.addBooking(bookingQuery,car)){
+                 System.out.println("Booked ur car and added to ur trips");
+             }
+             else System.out.println("Someting went wrong");
+           }
+    }
 }
